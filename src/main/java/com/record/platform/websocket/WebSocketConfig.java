@@ -1,4 +1,4 @@
-package com.record.websocket;
+package com.record.platform.websocket;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Bean;

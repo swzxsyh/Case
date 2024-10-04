@@ -1,4 +1,4 @@
-package com.record.websocket;
+package com.record.platform.websocket;
 
 import com.record.component.ThreadPoolComponent;
 import jakarta.annotation.PostConstruct;

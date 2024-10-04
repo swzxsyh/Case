@@ -10,14 +10,25 @@
         <version>3.3.4</version>
     </parent>
 
-    <groupId>org.example</groupId>
-    <artifactId>Test</artifactId>
+    <groupId>com.record</groupId>
+    <artifactId>Case</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>pushtechnology</id>
+            <url>https://download.diffusiondata.com/maven/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -54,13 +65,27 @@
             <scope>test</scope>
         </dependency>
 
-        <!--  引入websocket client      -->
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.17.0</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket -->
         <dependency>
             <groupId>org.java-websocket</groupId>
             <artifactId>Java-WebSocket</artifactId>
             <version>1.5.7</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.pushtechnology.diffusion/diffusion-client -->
+        <dependency>
+            <groupId>com.pushtechnology.diffusion</groupId>
+            <artifactId>diffusion-client</artifactId>
+            <version>6.11.0</version>
+        </dependency>
     </dependencies>
 
     <!--    打成jar包  -->
