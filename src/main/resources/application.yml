@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  undertow:
+    threads:
+      io: 10
+      worker: 80
+    buffer-size: 1024
+    direct-buffers: true
+
+spring:
+  profiles:
+    active: dev
+
+
+
+
+logging:
+  level:
+    org.springframework.web: debug
+    com.record: info

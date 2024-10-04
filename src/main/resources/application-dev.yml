@@ -1,0 +1,8 @@
+spring:
+  main:
+    lazy-initialization: false
+
+logging:
+  level:
+    org.springframework.web: info
+    com.record: info
