@@ -4,6 +4,7 @@ import com.record.component.ThreadPoolComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.mockito.internal.matchers.Null;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class NullPointService {
     @Autowired
     private ThreadPoolComponent component;
 
+    @Async("asyncTaskExecutor")
     public void pull() {
 
         Map<Integer, Integer> map = new HashMap<>();

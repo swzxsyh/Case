@@ -2,10 +2,12 @@ package com.record.component;
 
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 
+@Slf4j
 @Component
 public class ClientPoolComponent {
 
@@ -45,6 +47,17 @@ public class ClientPoolComponent {
     }
 
     public void execute(Runnable command, int priority) {
-        threadPoolExecutor.execute(new PriorityTask<>(command, null, priority)); // 注意这里的泛型为null
+        threadPoolExecutor.execute(new PriorityTask<>(wrap(command), null, priority)); // 注意这里的泛型为null
+    }
+
+    private Runnable wrap(Runnable command) {
+        return () -> {
+            try {
+                command.run();
+            } catch (Exception e) {
+                log.error("Exception in task execution: ", e); // 记录异常日志
+                throw e; // 如果需要，可以重新抛出异常
+            }
+        };
     }
 }
