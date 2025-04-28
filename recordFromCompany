@@ -1,6 +1,80 @@
 Spring Boot Reactive R2DBC初体验
 
 
+    public static void main(String[] args) {
+        Hooks.enableAutomaticContextPropagation();
+        Hooks.onErrorDropped(e -> log.warn("Dropped error: {}", e.toString()));
+        Hooks.onNextDropped(o -> log.warn("Dropped value: {}", o));
+        Hooks.onOperatorDebug();
+        //  注册 Reactor 全局 Hook
+        ReactorMdcSupport.install();
+        SpringApplication.run(SpiderCanalApplication.class, args);
+    }
+
+
+
+
+import org.slf4j.MDC;
+import reactor.core.publisher.Hooks;
+import reactor.core.publisher.Operators;
+import reactor.util.context.ContextView;
+import reactor.util.context.Context;
+import reactor.core.CoreSubscriber;
+
+public class ReactorMdcSupport {
+
+    private static final String TRACE_ID = "traceId";
+
+    public static void install() {
+        Hooks.onEachOperator("mdc", Operators.lift((scannable, subscriber) -> new MdcContextLifter<>(subscriber)));
+    }
+
+    static class MdcContextLifter<T> implements CoreSubscriber<T> {
+        private final CoreSubscriber<T> actual;
+
+        MdcContextLifter(CoreSubscriber<T> actual) {
+            this.actual = actual;
+        }
+
+        @Override
+        public void onSubscribe(org.reactivestreams.Subscription subscription) {
+            actual.onSubscribe(subscription);
+        }
+
+        @Override
+        public void onNext(T t) {
+            copyContextToMdc();
+            actual.onNext(t);
+        }
+
+        @Override
+        public void onError(Throwable throwable) {
+            copyContextToMdc();
+            actual.onError(throwable);
+        }
+
+        @Override
+        public void onComplete() {
+            copyContextToMdc();
+            actual.onComplete();
+        }
+
+        @Override
+        public Context currentContext() {
+            return actual.currentContext();
+        }
+
+        private void copyContextToMdc() {
+            ContextView contextView = actual.currentContext();
+            if (contextView.hasKey(TRACE_ID)) {
+                String traceId = contextView.get(TRACE_ID);
+                MDC.put(TRACE_ID, traceId);
+            }
+        }
+    }
+}
+
+
 
 
 @Slf4j
@@ -227,6 +301,10 @@ public class R2dbcProxyListener implements ProxyExecutionListener, ProxyMethodEx
     }
 }
 
+语句one反而limit 2
+SELECT spider_config.* FROM spider_config WHERE spider_config.status = ? AND spider_config.domain = ? LIMIT 2
+
+https://github.com/spring-projects/spring-data-r2dbc/issues/758
 
 # 日志配置
 logging:
